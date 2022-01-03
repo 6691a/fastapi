@@ -1,20 +1,21 @@
 import uvicorn
+
+from pydantic import BaseModel, HttpUrl
 from typing import Optional
 from fastapi import FastAPI
-from enum import Enum
 
 app = FastAPI()
 
 
-class Enumcls(str, Enum):
-    Name = "name"
-    Phone = "phone"
-    Birthday = "birthday"
+class User(BaseModel):
+    name: str
+    password: str
+    avatar_url: Optional[HttpUrl] = None
 
 
-@app.get("/")
-def main(param: Enumcls):
-    return f"Hello, World {param}"
+@app.get("/", response_model=User)
+def main(user):
+    return user
 
 
 if __name__ == "__main__":
